@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ISTC Nilphamari - Police Management</title>
+    <title>In-service Training Centre Nilphamari </title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght=400;600;700&display=swap');
 
@@ -23,6 +23,58 @@
             padding: 0;
             background-color: var(--bg-color);
             color: var(--text-dark);
+        }
+
+        /* Premium Bicycle Loader CSS - Transparent System */
+        #premium-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(1px);
+            z-index: 999999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+        .bicycle-wrapper {
+            animation: rideMotion 2s infinite ease-in-out;
+        }
+        .bike-svg {
+            width: 120px;
+            height: 120px;
+            filter: drop-shadow(0 10px 10px rgba(11, 32, 70, 0.2));
+        }
+        .bike-wheel {
+            transform-origin: center;
+            animation: spinWheel 1s infinite linear;
+        }
+        .wheel-left { transform-origin: 5.5px 17.5px; }
+        .wheel-right { transform-origin: 18.5px 17.5px; }
+        @keyframes spinWheel {
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes rideMotion {
+            0% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+            100% { transform: translateY(0) rotate(-2deg); }
+        }
+        .loader-text-bike {
+            margin-top: 25px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--police-blue);
+            letter-spacing: 1px;
+            font-family: 'Noto Sans Bengali', sans-serif;
+            animation: pulseText 1.5s infinite alternate;
+        }
+        @keyframes pulseText {
+            0% { opacity: 0.6; transform: scale(0.98); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
         /* Navbar */
@@ -68,7 +120,7 @@
             display: none;
             animation: fadeInUp 0.5s ease-out;
         }
-        .card.active { display: block; }
+        .card.active { display: block !important; }
         .card-header {
             border-bottom: 2px solid var(--police-blue);
             padding-bottom: 10px;
@@ -97,18 +149,6 @@
         .welcome-msg h1 { color: var(--police-blue); margin-bottom: 5px; }
         .welcome-msg p { color: #666; font-size: 16px; }
         
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 20px; }
-        .stat-box {
-            background: linear-gradient(135deg, var(--police-blue), #1a3668);
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-        .stat-box h4 { margin: 0 0 10px 0; font-weight: 400; opacity: 0.9; }
-        .stat-box h2 { margin: 0; font-size: 28px; }
-
         /* Unique & Premium Profile Card */
         .premium-profile {
             background: var(--white);
@@ -227,12 +267,41 @@
         .btn-gold { background-color: var(--police-gold); color: var(--police-blue); }
         .btn-action { padding: 5px 10px; font-size: 12px; margin: 2px; }
 
-        /* Tables */
+        /* Tables & Premium Tables */
         .table-responsive { overflow-x: auto; margin-top: 15px; }
         table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; }
         th, td { border: 1px solid #eee; padding: 12px; text-align: left; font-size: 14px; }
         th { background-color: var(--police-blue); color: var(--white); font-weight: 600; }
         tr:hover { background-color: #f8f9fa; }
+
+        .premium-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #edf2f7;
+        }
+        .premium-table th {
+            background: linear-gradient(135deg, var(--police-blue), #1a3668);
+            color: white;
+            font-weight: 600;
+            padding: 15px;
+            border: none;
+            text-align: left;
+        }
+        .premium-table td {
+            padding: 15px;
+            border-bottom: 1px solid #edf2f7;
+            border-right: none;
+            border-left: none;
+            color: #4a5568;
+            transition: background 0.3s;
+        }
+        .premium-table tbody tr:last-child td { border-bottom: none; }
+        .premium-table tbody tr:hover td { background-color: #f8fafc; color: var(--police-blue); }
 
         /* Toast Notification */
         #toast {
@@ -255,65 +324,188 @@
         @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
         @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
 
-        /* Print Layout (A4 Setup) */
+        /* Print Layout (A4 Setup & Formatting) */
         @media print {
-            @page { size: A4; margin: 15mm; }
+            @page { size: A4; margin: 12mm; }
+            html, body {
+                height: auto !important;
+                overflow: visible !important;
+                background: #ffffff !important;
+            }
             body * { visibility: hidden; }
+            .navbar, .nav-links, .no-print { display: none !important; }
+            .card:not(.print-active) { display: none !important; }
+            .container { padding: 0 !important; margin: 0 !important; max-width: 100% !important; width: 100% !important; }
             .print-active, .print-active * { visibility: visible !important; }
-            .print-active { position: relative; left: 0; top: 0; width: 100%; display: block !important; }
-            .no-print { display: none !important; }
-            .print-header { text-align: center; margin-bottom: 20px; }
+            .print-active {
+                position: static !important;
+                left: auto !important;
+                top: auto !important;
+                width: 100% !important;
+                height: auto !important;
+                overflow: visible !important;
+                display: block !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .print-header { text-align: center; margin-bottom: 20px; page-break-inside: avoid; break-inside: avoid; }
             .print-header h3, .print-header h4 { margin: 5px 0; }
+            .print-table { width: 100% !important; border-collapse: collapse !important; table-layout: auto; }
             .print-table th { background-color: #f2f2f2 !important; color: #000 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            tr { page-break-inside: avoid; }
-            .signature-section { margin-top: 50px; display: flex; justify-content: space-between; page-break-inside: avoid; }
-            .signature-box { text-align: center; width: 250px; }
+            .print-table th, .print-table td {
+                white-space: normal !important;
+                word-wrap: break-word !important;
+                word-break: break-word !important;
+                padding: 6px 8px !important;
+            }
+            thead { display: table-header-group; }
+            tr { page-break-inside: avoid !important; break-inside: avoid !important; }
+            .signature-section { margin-top: 40px; display: flex; justify-content: space-between; page-break-inside: avoid !important; break-inside: avoid !important; }
+            .signature-box { text-align: center; width: auto; min-width: 200px; white-space: nowrap; }
+            .signature-section span, .signature-section strong { white-space: nowrap; }
             .signature-line { border-top: 1px solid #000; margin-bottom: 5px; padding-top: 5px;}
+        }
+
+        /* Premium Member Profile Card for Duty Register */
+        .premium-member-card {
+            position: relative;
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 24px 16px 16px 16px;
+            width: calc(25% - 12px);
+            min-width: 240px;
+            box-shadow: 0 4px 15px rgba(11, 32, 70, 0.04);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            box-sizing: border-box;
+        }
+        .premium-member-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(11, 32, 70, 0.1);
+            border-color: var(--police-blue);
+            background: #ffffff;
+        }
+        .member-card-id {
+            position: absolute;
+            top: 10px;
+            left: 12px;
+            background: rgba(11, 32, 70, 0.06);
+            color: var(--police-blue);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 6px;
+            border: 1px solid rgba(11, 32, 70, 0.1);
+        }
+        .member-card-avatar {
+            width: 55px;
+            height: 55px;
+            background: rgba(11, 32, 70, 0.05);
+            color: var(--police-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px auto 12px auto;
+            font-size: 24px;
+            border: 1px solid rgba(11, 32, 70, 0.1);
+            transition: all 0.3s;
+        }
+        .premium-member-card:hover .member-card-avatar {
+            background: var(--police-blue);
+            color: #fff;
+        }
+        .member-card-name {
+            margin: 0 0 8px 0;
+            color: var(--police-blue);
+            font-size: 17px;
+            font-weight: 700;
+        }
+        .member-card-info {
+            margin: 0 0 5px 0;
+            color: #4a5568;
+            font-size: 13px;
+        }
+        .member-card-mobile {
+            margin: 8px 0 0 0;
+            color: var(--police-red);
+            font-size: 13px;
+            font-weight: 600;
+            background: rgba(190, 30, 45, 0.05);
+            padding: 4px 10px;
+            border-radius: 20px;
+            display: inline-block;
         }
     </style>
 </head>
 <body>
 
-    <!-- Navbar -->
+    <!-- Premium Bicycle Loader -->
+    <div id="premium-loader">
+        <div class="bicycle-wrapper">
+            <svg class="bike-svg" viewBox="0 0 24 24" fill="none" stroke="var(--police-blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="5.5" cy="17.5" r="3.5" class="bike-wheel wheel-left"></circle>
+                <circle cx="18.5" cy="17.5" r="3.5" class="bike-wheel wheel-right"></circle>
+                <path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"></path>
+                <path d="M12 17.5V14l-3-3 4-3 2 3h2"></path>
+            </svg>
+        </div>
+        <div class="loader-text-bike">ISTC Nilphamari ...</div>
+    </div>
+
     <div class="navbar no-print">
-        <h2>🛡️ ISTC NILPHAMARI</h2>
+        <h2>ISTC Nilphamari</h2>
         <div class="nav-links">
             <button onclick="showTab('dashboard')" id="nav-dashboard">ড্যাশবোর্ড</button>
             <button onclick="showTab('profile')" id="nav-profile">প্রোফাইল</button>
             <button onclick="showTab('members')" id="nav-members">সদস্য তালিকা</button>
-            <button onclick="showTab('attendance')" id="nav-attendance">হাজিরা</button>
+            <button onclick="showTab('attendance')" id="nav-attendance">হাজিরা রেজিস্টার</button>
             <button onclick="showTab('duty')" id="nav-duty">ডিউটি রেজিস্টার</button>
+            <button onclick="showTab('letters')" id="nav-letters">চিঠিপত্র রেজিস্টার</button>
         </div>
     </div>
 
     <div class="container">
         
-        <!-- 0. Dashboard -->
         <div id="dashboard" class="card active no-print">
             <div class="welcome-msg">
-                <h1>স্বাগতম, ইন-সার্ভিস ট্রেনিং সেন্টার (ISTC) নীলফামারী</h1>
-                <p>বাংলাদেশ পুলিশ - ম্যানেজমেন্ট ড্যাশবোর্ড</p>
+                <h1>স্বাগতম, ইন-সার্ভিস ট্রেনিং সেন্টার,নীলফামারী</h1>
+                <p>রংপুর রেঞ্জ - বাংলাদেশ পুলিশ - রংপুর।</p>
             </div>
-            
-            <h3 class="card-header">সর্বশেষ ৬ দিনের হাজিরার সারাংশ</h3>
-            <div class="stats-grid" id="dashboard-stats">
-                <!-- JS will populate this -->
+
+            <!-- SECTION FOR GRAPHICS CARDS (KEPT INTACT) -->
+            <div id="dashboard-attendance-details"></div>
+
+            <h3 class="card-header" style="margin-top: 30px;">চলতি মাসের ডিউটির সারাংশ </h3>
+            <div class="table-responsive">
+                <table class="premium-table">
+                    <thead>
+                        <tr>
+                            <th>সদস্যের নাম</th>
+                            <th>বিপি নাম্বার</th>
+                            <th>পদবী</th>
+                            <th>মোট ডিউটি (চলতি মাস)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dashboard-duty-stats">
+                        </tbody>
+                </table>
             </div>
         </div>
 
-        <!-- 1. Profile Area (Commandant & Reporting Officer) -->
         <div id="profile" class="card no-print">
             <div style="display: flex; gap: 20px; flex-wrap: wrap;">
                 
-                <!-- Unit Head Profile -->
                 <div style="flex: 1; min-width: 300px;">
-                    <h3 class="card-header">ইউনিট প্রধানের প্রোফাইল</h3>
+                    <h3 class="card-header">ইউনিট প্রধান</h3>
                     
                     <div class="premium-profile" id="profile-view">
                         <div class="profile-title-container">
                             <h2 id="view-cmd-name">নাম</h2>
                             <button class="edit-icon-btn" onclick="toggleProfileEdit()" title="এডিট করুন">
-                                <span>✏️ এডিট প্রোফাইল</span>
+                                <span>✏️  </span>
                             </button>
                         </div>
                         <div class="profile-grid">
@@ -329,7 +521,6 @@
                         </div>
                     </div>
 
-                    <!-- Profile Edit Form (Hidden by default) -->
                     <div id="profile-edit" style="display:none; margin-top:20px;">
                         <h4 style="color:var(--police-red); margin-top:0;">তথ্য আপডেট করুন</h4>
                         <div class="form-grid">
@@ -349,18 +540,17 @@
                     </div>
                 </div>
 
-                <!-- Reporting Officer Profile -->
                 <div style="flex: 1; min-width: 300px;">
                     <h3 class="card-header">দায়িত্বপ্রাপ্ত কর্মকর্তা (রিপোর্টিং অফিসার)</h3>
                     
                     <div class="premium-profile" style="border-top-color: var(--police-red);">
                         <div class="profile-title-container">
-                            <h2 style="font-size: 18px; color: var(--police-blue);">कर्मকর্তা নির্বাচন</h2>
+                            <h2 style="font-size: 18px; color: var(--police-blue);">কর্মকর্তা নির্বাচন</h2>
                         </div>
                         <div class="form-group">
                             <label>সদস্য তালিকা থেকে নির্বাচন করুন</label>
                             <select id="global-rep-officer" onchange="saveReportingOfficer()" style="margin-top: 5px; width: 100%;">
-                                <option value="">कर्मকর্তা নির্বাচন করুন...</option>
+                                <option value="">কর্মকর্তা নির্বাচন করুন...</option>
                             </select>
                         </div>
                         <div id="rep-officer-details" style="margin-top: 20px; display: none; border-top: 1px solid #edf2f7; padding-top: 15px;">
@@ -377,7 +567,6 @@
             </div>
         </div>
 
-        <!-- 2. Members Management -->
         <div id="members" class="card no-print">
             <h3 class="card-header"><span id="member-form-title">সদস্য যুক্ত করুন</span></h3>
             <input type="hidden" id="mem-id">
@@ -385,7 +574,7 @@
                 <div class="form-group"><label>নাম</label><input type="text" id="mem-name"></div>
                 <div class="form-group"><label>বিপি নাম্বার</label><input type="text" id="mem-bp"></div>
                 <div class="form-group"><label>পদবী</label><input type="text" id="mem-desig"></div>
-                <div class="form-group"><label>कर्मস্থলে যোগদানের ধরন</label><input type="text" id="mem-join-type" placeholder="যেমন: বদলি, প্রেষণ, সংযুক্ত"></div>
+                <div class="form-group"><label>কর্মস্থলে যোগদানের ধরন</label><input type="text" id="mem-join-type" placeholder="যেমন: বদলি, প্রেষণ, সংযুক্ত"></div>
                 <div class="form-group"><label>ইউনিট এ যোগদানের তারিখ</label><input type="date" id="mem-unit-join-date"></div>
                 <div class="form-group"><label>মোবাইল নাম্বার</label><input type="text" id="mem-mobile"></div>
             </div>
@@ -397,17 +586,16 @@
                 <button class="btn btn-gold" style="margin:0; padding:8px 15px;" onclick="printMembersReport()">🖨️ তালিকা প্রিন্ট করুন</button>
             </h3>
             <div class="table-responsive">
-                <table>
+                <table class="premium-table">
                     <thead><tr><th>নাম</th><th>বিপি নাম্বার</th><th>পদবী</th><th>যোগদানের ধরন</th><th>ইউনিট এ যোগদানের তারিখ</th><th>মোবাইল</th><th>অ্যাকশন</th></tr></thead>
                     <tbody id="member-list-body"></tbody>
                 </table>
             </div>
         </div>
 
-        <!-- 3. Attendance System -->
         <div id="attendance" class="card no-print">
             <h3 class="card-header">
-                সংরक्षित হাজিরা রেকর্ড সমূহ
+                 হাজিরা রেকর্ড সমূহ
                 <button class="btn btn-gold" style="margin:0; padding:8px 15px;" onclick="showAttendanceForm('')">➕ নতুন হাজিরা যুক্ত করুন</button>
             </h3>
             
@@ -420,7 +608,7 @@
                 </div>
                 
                 <div class="table-responsive">
-                    <table>
+                    <table class="premium-table">
                         <thead>
                             <tr><th>তারিখ</th><th>মোট উপস্থিত</th><th>মোট অনুপস্থিত</th><th>অ্যাকশন</th></tr>
                         </thead>
@@ -428,7 +616,6 @@
                     </table>
                 </div>
 
-                <!-- Integrated Attendance Report Generator Component -->
                 <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 30px 0;">
                 
                 <div style="background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0;">
@@ -452,9 +639,9 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table>
+                    <table class="premium-table">
                         <thead>
-                            <tr><th>নাম</th><th>বিপি নাম্বার</th><th>পদবী</th><th>স্ট্যাটাস</th><th>مতামত / কারণ (যদি থাকে)</th></tr>
+                            <tr><th>নাম</th><th>বিপি নাম্বার</th><th>পদবী</th><th>স্ট্যাটাস</th><th>মতামত / কারণ (যদি থাকে)</th></tr>
                         </thead>
                         <tbody id="attendance-list-body"></tbody>
                     </table>
@@ -466,12 +653,15 @@
             </div>
         </div>
 
-        <!-- 4. Duty Register -->
         <div id="duty" class="card no-print">
             <h3 class="card-header">ডিউটি রেজিস্টার - সদস্য নির্বাচন</h3>
             
-            <div id="duty-member-grid" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
-                <!-- JS will auto generate member buttons here -->
+            <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                <p style="margin:0; font-size:14px; color:var(--police-blue); font-weight:600;">চেকবক্স সিলেক্ট করে একাধিক সদস্যের চলতি মাসের ডিউটি একসাথে প্রিন্ট করুন</p>
+                <button class="btn btn-gold" style="margin:0; padding:8px 15px;" onclick="printSelectedMembersDuty()">🖨️ নির্বাচিত সদস্যদের ডিউটি প্রিন্ট করুন</button>
+            </div>
+            
+            <div id="duty-member-grid" style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 20px;">
             </div>
             
             <input type="hidden" id="current-duty-member">
@@ -509,9 +699,8 @@
                 <button class="btn" id="btn-save-duty" onclick="saveDuty()">ডিউটি যুক্ত করুন</button>
                 <button class="btn btn-red" id="btn-cancel-duty" onclick="resetDutyForm()" style="display:none;">বাতিল</button>
 
-                <!-- Serial Duty Report with Print Date Range -->
                 <h4 style="margin-top: 30px; border-bottom: 2px solid var(--police-blue); padding-bottom: 10px; display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap:10px;">
-                    <span>সকল ডিউটি রিপোর্ট (সিরিয়াল অনুযায়ী)</span>
+                    <span>সকল ডিউটি রিপোর্ট </span>
                     <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                         <input type="date" id="search-duty-date" onchange="renderDutyList(document.getElementById('current-duty-member').value)" style="padding:8px; border:1px solid #ccc; border-radius:4px;" title="তারিখ অনুযায়ী সার্চ করুন">
                         
@@ -527,7 +716,7 @@
                 <div id="current-month-duty-stats" style="margin-bottom:15px; font-weight:bold; color:var(--police-red); font-size: 16px;"></div>
                 
                 <div class="table-responsive">
-                    <table>
+                    <table class="premium-table">
                         <thead>
                             <tr><th>তারিখ</th><th>গন্তব্য স্থল</th><th>ডিউটি ধরন</th><th>মন্তব্য</th><th>অ্যাকশন</th></tr>
                         </thead>
@@ -537,12 +726,93 @@
             </div>
         </div>
 
-        <!-- Printable Area (Standard Attendance Report) -->
+        <!-- NEW: LETTERS SECTION -->
+        <div id="letters" class="card no-print">
+            <h3 class="card-header">চিঠিপত্র ব্যবস্থাপনা রেজিস্টার</h3>
+
+            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <button class="btn btn-gold" id="btn-letters-recv-tab" onclick="switchLettersTab('recv')">📩 পত্র গ্রহণ</button>
+                <button class="btn" id="btn-letters-send-tab" onclick="switchLettersTab('send')" style="background-color: #4a5568;">📤 পত্র প্রেরণ</button>
+            </div>
+
+            <!-- Recv Letters Sub-Section -->
+            <div id="letters-recv-section">
+                <h4 style="color: var(--police-blue); border-bottom: 2px solid var(--police-blue); padding-bottom: 5px;" id="recv-form-title">পত্র গ্রহণ - নতুন তথ্য যুক্ত করুন</h4>
+                <input type="hidden" id="recv-id">
+                <div class="form-grid">
+                    <div class="form-group"><label>রেজিস্টার নাম্বার</label><input type="text" id="recv-reg-no" placeholder="রেজিস্টার নাম্বার"></div>
+                    <div class="form-group"><label>তারিখ</label><input type="date" id="recv-date"></div>
+                    <div class="form-group"><label>স্মারক নাম্বার</label><input type="text" id="recv-memo-no" placeholder="স্মারক নাম্বার"></div>
+                    <div class="form-group"><label>বিষয়</label><input type="text" id="recv-subject" placeholder="পত্রের বিষয়"></div>
+                </div>
+                <button class="btn" id="btn-save-recv" onclick="saveReceivedLetter()">তথ্য সংরক্ষণ করুন</button>
+                <button class="btn btn-red" id="btn-cancel-recv" onclick="resetReceivedLetterForm()" style="display:none;">বাতিল</button>
+
+                <h4 style="margin-top: 30px; color: var(--police-blue);">গৃহীত পত্রের তালিকা</h4>
+                <div class="table-responsive">
+                    <table class="premium-table">
+                        <thead>
+                            <tr><th>রেজিস্টার নাম্বার</th><th>তারিখ</th><th>স্মারক নাম্বার</th><th>বিষয়</th><th>অ্যাকশন</th></tr>
+                        </thead>
+                        <tbody id="recv-letters-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Send Letters Sub-Section -->
+            <div id="letters-send-section" style="display:none;">
+                <h4 style="color: var(--police-blue); border-bottom: 2px solid var(--police-blue); padding-bottom: 5px;" id="send-form-title">পত্র প্রেরণ - নতুন তথ্য যুক্ত করুন</h4>
+                <input type="hidden" id="send-id">
+                <div class="form-grid">
+                    <div class="form-group"><label>রেজিস্টার নাম্বার</label><input type="text" id="send-reg-no" placeholder="রেজিস্টার নাম্বার"></div>
+                    <div class="form-group"><label>তারিখ</label><input type="date" id="send-date"></div>
+                    <div class="form-group"><label>স্মারক নাম্বার</label><input type="text" id="send-memo-no" placeholder="স্মারক নাম্বার"></div>
+                    <div class="form-group"><label>বিষয়</label><input type="text" id="send-subject" placeholder="পত্রের বিষয়"></div>
+                </div>
+                <button class="btn" id="btn-save-send" onclick="saveSentLetter()">তথ্য সংরক্ষণ করুন</button>
+                <button class="btn btn-red" id="btn-cancel-send" onclick="resetSentLetterForm()" style="display:none;">বাতিল</button>
+
+                <h4 style="margin-top: 30px; color: var(--police-blue);">প্রেরিত পত্রের তালিকা</h4>
+                <div class="table-responsive">
+                    <table class="premium-table">
+                        <thead>
+                            <tr><th>রেজিস্টার নাম্বার</th><th>তারিখ</th><th>স্মারক নাম্বার</th><th>বিষয়</th><th>অ্যাকশন</th></tr>
+                        </thead>
+                        <tbody id="send-letters-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Print Controls for Letters -->
+            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 30px 0;">
+            <div style="background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <h4 style="margin-top: 0; color: var(--police-blue);">🖨️ চিঠিপত্র রিপোর্ট প্রিন্ট জেনারেটর</h4>
+                <div class="form-grid" style="margin-bottom: 15px;">
+                    <div class="form-group">
+                        <label>চিঠিপত্রের ধরন নির্বাচন করুন</label>
+                        <select id="letter-print-type">
+                            <option value="recv">পত্র গ্রহণ</option>
+                            <option value="send">পত্র প্রেরণ</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>একক তারিখ নির্বাচন (অথবা তারিখ শুরু)</label>
+                        <input type="date" id="letter-print-start">
+                    </div>
+                    <div class="form-group">
+                        <label>শেষের তারিখ</label>
+                        <input type="date" id="letter-print-end">
+                    </div>
+                </div>
+                <button class="btn btn-red" onclick="printLettersReport()">🖨️ চিঠিপত্র রিপোর্ট প্রিন্ট করুন</button>
+            </div>
+        </div>
+
         <div id="print-area" style="display: none; background: white; padding: 20px;">
             <div class="print-header">
                 <h3>গণপ্রজাতন্ত্রী বাংলাদেশ সরকার</h3>
                 <h4>বাংলাদেশ পুলিশ</h4>
-                <h4>ইন-সার্ভিস ট্রেনিং সেন্টার (ISTC), নীলফামারী</h4>
+                <h4>ইন-সার্ভিস ট্রেনিং সেন্টার,নীলফামারী</h4>
                 <p><strong>দৈনিক হাজিরা রিপোর্ট</strong></p>
                 <p>তারিখ: <span id="print-date"></span></p>
             </div>
@@ -569,27 +839,26 @@
                     <span id="sig-name"></span><br>
                     বিপি: <span id="sig-bp"></span><br>
                     <span id="sig-desig"></span><br>
-                    আইএসটিসি, নীলফামারী।
+                    ইন-সার্ভিস সার্ভিস ট্রেনিং সেন্টার,নীলফামারী।
                 </div>
                 <div class="signature-box">
                     <br><br><br>
                     <div class="signature-line"></div>
-                    <strong>অনুমোদনকারী কর্তৃপক্ষ</strong><br>
+                    <strong>অনুমোদনকারী কর্মকর্তা</strong><br>
                     <span id="cmd-sig-name"></span><br>
                     বিপি: <span id="cmd-sig-bp"></span><br>
                     <span id="cmd-sig-desig"></span><br>
                     <span id="cmd-sig-role"></span><br>
-                    আইএসটিসি, নীলফামারী।
+                    ইন-সার্ভিস ট্রেনিং সেন্টার,নীলফামারী।
                 </div>
             </div>
         </div>
 
-        <!-- Printable Area (Duty Report) -->
         <div id="print-area-duty" style="display: none; background: white; padding: 20px;">
             <div class="print-header">
                 <h3>গণপ্রজাতন্ত্রী বাংলাদেশ সরকার</h3>
                 <h4>বাংলাদেশ পুলিশ</h4>
-                <h4>ইন-সার্ভিস ট্রেনিং সেন্টার (ISTC), নীলফামারী</h4>
+                <h4>ইন-সার্ভিস ট্রেনিং সেন্টার , নীলফামারী</h4>
                 <p><strong>ব্যক্তিগত ডিউটি রিপোর্ট</strong></p>
             </div>
             
@@ -617,17 +886,16 @@
                 <div class="signature-box">
                     <div class="signature-line"></div>
                     <strong>কর্তৃপক্ষের স্বাক্ষর ও সীল</strong><br>
-                    আইএসটিসি, নীলফামারী।
+                    ইন-সার্ভিস ট্রেনিং সেন্টার,নীলফামারী।
                 </div>
             </div>
         </div>
         
-        <!-- Printable Area (Members Report) -->
         <div id="print-area-members" style="display: none; background: white; padding: 20px;">
             <div class="print-header">
                 <h3>গণপ্রজাতন্ত্রী বাংলাদেশ সরকার</h3>
                 <h4>বাংলাদেশ পুলিশ</h4>
-                <h4>ইন-সার্ভিস ট্রেনিং সেন্টার (ISTC), নীলফামারী</h4>
+                <h4>ইন-সার্ভিস ট্রেনিং সেন্টার,নীলফামারী</h4>
                 <p><strong>সকল সদস্যদের তালিকা</strong></p>
             </div>
             
@@ -650,14 +918,49 @@
                 <div class="signature-box">
                     <div class="signature-line"></div>
                     <strong>কর্তৃপক্ষের স্বাক্ষর ও সীল</strong><br>
-                    আইএসটিসি, নীলফামারী।
+                    ইন-সার্ভিস ট্রেনিং সেন্টার,নীলফামারী।
+                </div>
+            </div>
+        </div>
+
+        <div id="print-area-multi-duty" style="display: none; background: white; padding: 20px;">
+            <div id="multi-duty-print-content"></div>
+        </div>
+
+        <!-- PRINT AREA FOR LETTERS -->
+        <div id="print-area-letters" style="display: none; background: white; padding: 20px;">
+            <div class="print-header">
+                <h3>গণপ্রজাতন্ত্রী বাংলাদেশ সরকার</h3>
+                <h4>বাংলাদেশ পুলিশ</h4>
+                <h4>ইন-সার্ভিস ট্রেনিং সেন্টার,নীলফামারী</h4>
+                <p><strong id="letter-print-title">চিঠিপত্র রেজিস্টার রিপোর্ট</strong></p>
+                <p id="letter-print-date-range"></p>
+            </div>
+            
+            <table class="print-table" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                <thead>
+                    <tr>
+                        <th style="border: 1px solid #000; padding: 8px; background-color:#f2f2f2;">ক্রমিক</th>
+                        <th style="border: 1px solid #000; padding: 8px; background-color:#f2f2f2;">রেজিস্টার নাম্বার</th>
+                        <th style="border: 1px solid #000; padding: 8px; background-color:#f2f2f2;">তারিখ</th>
+                        <th style="border: 1px solid #000; padding: 8px; background-color:#f2f2f2;">স্মারক নাম্বার</th>
+                        <th style="border: 1px solid #000; padding: 8px; background-color:#f2f2f2;">বিষয়</th>
+                    </tr>
+                </thead>
+                <tbody id="print-letters-table-body"></tbody>
+            </table>
+            
+            <div class="signature-section" style="justify-content: flex-end; margin-top:60px;">
+                <div class="signature-box">
+                    <div class="signature-line"></div>
+                    <strong>কর্তৃপক্ষের স্বাক্ষর ও সীল</strong><br>
+                    ইন-সার্ভিস ট্রেনিং সেন্টার,নীলফামারী।
                 </div>
             </div>
         </div>
 
     </div>
 
-    <!-- Toast Component -->
     <div id="toast">Message</div>
 
     <script>
@@ -672,6 +975,9 @@
         let attendanceData = JSON.parse(localStorage.getItem('istc_attendance')) || {};
         let dutyData = JSON.parse(localStorage.getItem('istc_duty')) || [];
         let globalRepOfficerId = localStorage.getItem('istc_rep_officer') || "";
+        
+        let receivedLetters = JSON.parse(localStorage.getItem('istc_recv_letters')) || [];
+        let sentLetters = JSON.parse(localStorage.getItem('istc_sent_letters')) || [];
 
         // Utility: Show Toast Notification
         function showToast(msg) {
@@ -681,54 +987,93 @@
             setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
         }
 
-        // --- UPDATED: Sync Data to Google Sheets (CORS & Redirection Solved) ---
+        // --- NEW & UPDATED: Sync Data to Google Sheets with Offline Support ---
         async function syncToGoogleSheet(action, data) {
-            if (!SCRIPT_URL || SCRIPT_URL === 'YOUR_GOOGLE_APP_SCRIPT_URL_HERE' || SCRIPT_URL === '') {
-                showToast('অফলাইনে সেভ হয়েছে (Google Script URL সেট করা নেই)');
+            if (!navigator.onLine) {
+                showToast('অফলাইনে সেভ হয়েছে। নেট কানেকশন পেলে অটো সিঙ্ক হবে।');
+                localStorage.setItem('needsSync', 'true');
                 return;
             }
             showToast('Google Sheets-এ সিঙ্ক হচ্ছে...');
             try {
-                // Fetch with 'no-cors' mode to resolve browser redirection issues with Google Apps Script
-                await fetch(SCRIPT_URL, {
+                fetch(SCRIPT_URL, {
                     method: 'POST',
-                    mode: 'no-cors',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify({ action: action, data: data })
+                }).then(() => {
+                    showToast('ক্লাউডে সফলভাবে সেভ হয়েছে!');
+                }).catch(() => {
+                    showToast('অফলাইনে সেভ হয়েছে। নেট কানেকশন পেলে অটো সিঙ্ক হবে।');
+                    localStorage.setItem('needsSync', 'true');
                 });
-                showToast('ক্লাউডে সফলভাবে সেভ হয়েছে!');
             } catch (error) {
-                console.error("Sync error:", error);
-                showToast('অফলাইনে সেভ হয়েছে। নেট কানেকশন চেক করুন।');
+                console.error(error);
             }
         }
 
-        // --- UPDATED: Fetch Initial Data from Google Sheets (Robust Check) ---
+        // --- NEW: Auto Sync when Online ---
+        window.addEventListener('online', async () => {
+            if (localStorage.getItem('needsSync') === 'true') {
+                showToast('ইন্টারনেট সংযোগ পাওয়া গেছে! অফলাইন ডেটা সিঙ্ক হচ্ছে...');
+                try {
+                    await fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'SYNC_COMMANDANT', data: commandant }) });
+                    await fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'SYNC_MEMBERS', data: members }) });
+                    await fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'SYNC_ATTENDANCE', data: attendanceData }) });
+                    await fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'SYNC_DUTY', data: dutyData }) });
+                    await fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'SYNC_RECV_LETTERS', data: receivedLetters }) });
+                    await fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'SYNC_SENT_LETTERS', data: sentLetters }) });
+                    localStorage.removeItem('needsSync');
+                    showToast('অফলাইন ডেটা সফলভাবে ক্লাউডে সিঙ্ক হয়েছে!');
+                } catch(e) { console.error(e); }
+            }
+        });
+
+        // --- UPDATED: Fetch Initial Data & Prevent Dashboard Hiding ---
         async function fetchInitialData() {
-            if(!SCRIPT_URL || SCRIPT_URL === 'YOUR_GOOGLE_APP_SCRIPT_URL_HERE' || SCRIPT_URL === '') return;
+            if(SCRIPT_URL === 'YOUR_GOOGLE_APP_SCRIPT_URL_HERE' || !navigator.onLine) return;
+            
+            // If offline data is pending to sync, upload it instead of downloading old data
+            if(localStorage.getItem('needsSync') === 'true') {
+                window.dispatchEvent(new Event('online'));
+                return;
+            }
+
             try {
-                showToast('ক্লাউড থেকে ডেটা চেক করা হচ্ছে...');
                 let response = await fetch(SCRIPT_URL);
-                if (!response.ok) throw new Error('Network response was not ok');
                 let result = await response.json();
                 
-                if (result.commandant && Object.keys(result.commandant).length > 0) commandant = result.commandant;
-                if (result.members && result.members.length > 0) members = result.members;
-                if (result.attendance && Object.keys(result.attendance).length > 0) attendanceData = result.attendance;
-                if (result.duty && result.duty.length > 0) dutyData = result.duty;
+                let isUpdated = false;
+                if (result.commandant && Object.keys(result.commandant).length > 0) { commandant = result.commandant; isUpdated = true; }
+                if (result.members && result.members.length > 0) { members = result.members; isUpdated = true; }
+                if (result.attendance && Object.keys(result.attendance).length > 0) { 
+                    // Merge local data to avoid wiping out unsynced local saves on refresh
+                    let localAtt = JSON.parse(localStorage.getItem('istc_attendance')) || {};
+                    attendanceData = { ...result.attendance, ...localAtt };
+                    isUpdated = true; 
+                }
+                if (result.duty && result.duty.length > 0) { dutyData = result.duty; isUpdated = true; }
+                if (result.recvLetters && result.recvLetters.length > 0) { receivedLetters = result.recvLetters; isUpdated = true; }
+                if (result.sentLetters && result.sentLetters.length > 0) { sentLetters = result.sentLetters; isUpdated = true; }
 
-                localStorage.setItem('istc_commandant', JSON.stringify(commandant));
-                localStorage.setItem('istc_members', JSON.stringify(members));
-                localStorage.setItem('istc_attendance', JSON.stringify(attendanceData));
-                localStorage.setItem('istc_duty', JSON.stringify(dutyData));
+                if (isUpdated) {
+                    localStorage.setItem('istc_commandant', JSON.stringify(commandant));
+                    localStorage.setItem('istc_members', JSON.stringify(members));
+                    localStorage.setItem('istc_attendance', JSON.stringify(attendanceData));
+                    localStorage.setItem('istc_duty', JSON.stringify(dutyData));
+                    localStorage.setItem('istc_recv_letters', JSON.stringify(receivedLetters));
+                    localStorage.setItem('istc_sent_letters', JSON.stringify(sentLetters));
+                }
 
-                // Refresh UI after fetch
+                // রিফ্রেশ করার পর ড্যাশবোর্ডের ডেটা যাতে হাইড না হয় তার জন্য পুনরায় লোড
                 let currentActiveTab = document.querySelector('.card.active') ? document.querySelector('.card.active').id : 'dashboard';
                 showTab(currentActiveTab);
-                showToast('ডেটা আপ-টু-ডেট হয়েছে!');
+                
+                // Ensure Dashboard explicitly re-renders and fills data correctly
+                if(currentActiveTab === 'dashboard') {
+                    loadDashboard();
+                }
             } catch(e) {
                 console.error("Fetch error:", e);
-                showToast('ক্লাউড থেকে ডেটা লোড করা যায়নি (কানেকশন চেক করুন)');
             }
         }
 
@@ -756,43 +1101,110 @@
                 populateDutyMemberButtons();
                 document.getElementById('duty-profile-container').style.display = 'none';
             }
+            if(tabId === 'letters') {
+                switchLettersTab('recv');
+                renderReceivedLetters();
+                renderSentLetters();
+            }
             
             // Reset Print areas
             document.getElementById('print-area').classList.remove('print-active');
             document.getElementById('print-area-duty').classList.remove('print-active');
             document.getElementById('print-area-members').classList.remove('print-active');
+            if(document.getElementById('print-area-multi-duty')) document.getElementById('print-area-multi-duty').classList.remove('print-active');
+            if(document.getElementById('print-area-letters')) document.getElementById('print-area-letters').classList.remove('print-active');
         }
 
         // --- 0. Dashboard Section ---
         function loadDashboard() {
-            let statsDiv = document.getElementById('dashboard-stats');
-            statsDiv.innerHTML = '';
+            let detailsDiv = document.getElementById('dashboard-attendance-details');
+            if(detailsDiv) detailsDiv.innerHTML = '';
             
-            for(let i=0; i<6; i++) {
-                let d = new Date();
-                d.setDate(d.getDate() - i);
-                let dateStr = d.toISOString().split('T')[0];
-                
-                let dayData = attendanceData[dateStr] || [];
-                let present = dayData.filter(x => x.status === 'উপস্থিত').length;
-                let absent = dayData.filter(x => x.status === 'অনুপস্থিত').length;
-                let leave = dayData.filter(x => x.status === 'ছুটি').length;
-                let duty = dayData.filter(x => x.status === 'ডিউটি').length;
+            let dates = Object.keys(attendanceData).sort((a,b) => new Date(b) - new Date(a));
+            let latestDateStr = dates.length > 0 ? dates[0] : null;
+            let dayData = latestDateStr ? attendanceData[latestDateStr] : [];
+            let displayDate = latestDateStr ? new Date(latestDateStr).toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' }) : 'কোনো তথ্য নেই';
 
-                let formattedDate = d.toLocaleDateString('bn-BD', { day: 'numeric', month: 'short' });
-                
-                let html = `
-                    <div class="stat-box">
-                        <h4>${formattedDate}</h4>
-                        <div style="font-size:14px; text-align:left; margin-top:10px;">
-                            <div>✔️ উপস্থিত: <b>${present}</b></div>
-                            <div>❌ অনুপস্থিত: <b>${absent}</b></div>
-                            <div>🏖️ ছুটি: <b>${leave}</b></div>
-                            <div>🛡️ ডিউটি: <b>${duty}</b></div>
+            // NEW: Graphical Cards for Today's Attendance Details
+            let detailsHTML = `<h3 class="card-header" style="font-size: 18px; border-bottom: 2px dashed var(--police-blue);">সর্বশেষ হাজিরার বিস্তারিত তথ্যসমূহ</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; margin-top: 15px;">`;
+
+            if (members.length === 0) {
+                detailsHTML += `<p style="grid-column: 1/-1; text-align: center; color: #666;">কোনো সদস্য নেই</p>`;
+            } else {
+                members.forEach(mem => {
+                    let existing = dayData.find(x => x.id == mem.id);
+                    let status = existing ? existing.status : 'মার্ক করা হয়নি';
+                    let remarks = (existing && existing.remarks) ? existing.remarks : '';
+                    
+                    let bgColor = '#f1f5f9';
+                    let textColor = '#475569';
+                    let borderColor = '#cbd5e1';
+                    let icon = '👤';
+
+                    if (status === 'উপস্থিত') { bgColor = '#dcfce7'; textColor = '#166534'; borderColor = '#22c55e'; icon = '✔️'; }
+                    else if (status === 'অনুপস্থিত') { bgColor = '#fee2e2'; textColor = '#991b1b'; borderColor = '#ef4444'; icon = '❌'; }
+                    else if (status === 'ছুটি') { bgColor = '#fef9c3'; textColor = '#854d0e'; borderColor = '#eab308'; icon = '🏖️'; }
+                    else if (status === 'ডাক ডিউটি') { bgColor = '#dbeafe'; textColor = '#1e40af'; borderColor = '#3b82f6'; icon = '🛡️'; }
+                    else if (status === 'অফিস ডিউটি') { bgColor = '#e0e7ff'; textColor = '#3730a3'; borderColor = '#6366f1'; icon = '🏢'; }
+                    else if (status === 'অসুস্থ') { bgColor = '#f3e8ff'; textColor = '#6b21a8'; borderColor = '#a855f7'; icon = '🏥'; }
+
+                    detailsHTML += `
+                        <div style="background: linear-gradient(145deg, #ffffff, #f8fafc); border-radius: 12px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-left: 5px solid ${borderColor}; position: relative; overflow: hidden; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                            <div style="position: absolute; right: -5px; top: -5px; font-size: 60px; opacity: 0.05;">${icon}</div>
+                            <div style="font-weight: 700; font-size: 16px; color: var(--police-blue); margin-bottom: 5px;">${mem.name}</div>
+                            <div style="font-size: 12px; color: #64748b; margin-bottom: 10px;">${mem.desig} | বিপি: ${mem.bp}</div>
+                            <div style="display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; background: ${bgColor}; color: ${textColor}; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                                ${icon} ${status}
+                            </div>
+                            ${remarks ? `<div style="font-size:11px; margin-top:8px; color:#64748b; font-style: italic;">📝 ${remarks}</div>` : ''}
                         </div>
-                    </div>
-                `;
-                statsDiv.innerHTML += html;
+                    `;
+                });
+            }
+            detailsHTML += `</div>`;
+            detailsHTML += `<div style="text-align: right; margin-top: 15px; font-size: 14px; color: var(--police-blue); font-weight: bold;">সর্বশেষ হাজিরা যুক্তর তারিখ: ${displayDate}</div>`;
+            if(detailsDiv) detailsDiv.innerHTML = detailsHTML;
+
+            // --- Load Dashboard Duty Stats FIX ---
+            let dutyStatsTbody = document.getElementById('dashboard-duty-stats');
+            if(dutyStatsTbody) {
+                dutyStatsTbody.innerHTML = '';
+                
+                let currentMonth = new Date().getMonth();
+                let currentYear = new Date().getFullYear();
+                
+                if (members.length === 0) {
+                    dutyStatsTbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">কোনো সদস্য নেই</td></tr>';
+                } else {
+                    members.forEach(mem => {
+                        let memberDuties = dutyData.filter(d => d.memberId === mem.id);
+                        let currentMonthCount = 0;
+                        
+                        memberDuties.forEach(d => {
+                            // ডিউটি ডেট পার্সিং বাগ ফিক্স
+                            if(d.date) {
+                                let parts = d.date.split('-');
+                                if(parts.length === 3) {
+                                    let dYear = parseInt(parts[0]);
+                                    let dMonth = parseInt(parts[1]) - 1; 
+                                    if(dMonth === currentMonth && dYear === currentYear) {
+                                        currentMonthCount++;
+                                    }
+                                }
+                            }
+                        });
+                        
+                        dutyStatsTbody.innerHTML += `
+                            <tr>
+                                <td>${mem.name}</td>
+                                <td>${mem.bp}</td>
+                                <td>${mem.desig}</td>
+                                <td style="font-weight:bold; color:var(--police-red);">${currentMonthCount} টি</td>
+                            </tr>
+                        `;
+                    });
+                }
             }
         }
 
@@ -843,14 +1255,14 @@
             localStorage.setItem('istc_commandant', JSON.stringify(commandant));
             syncToGoogleSheet('SYNC_COMMANDANT', commandant);
             
-            showToast('কমান্ড্যান্ট প্রোফাইল সফলভাবে আপডেট হয়েছে!');
+            showToast('ইউনিট প্রধানের প্রোফাইল সফলভাবে আপডেট হয়েছে!');
             loadProfileView();
             toggleProfileEdit();
         }
 
         function populateGlobalRepOfficer() {
             let select = document.getElementById('global-rep-officer');
-            select.innerHTML = '<option value="">कर्मকর্তা নির্বাচন করুন...</option>';
+            select.innerHTML = '<option value="">কর্মকর্তা নির্বাচন করুন...</option>';
             members.forEach(mem => {
                 select.innerHTML += `<option value="${mem.id}" ${mem.id == globalRepOfficerId ? 'selected' : ''}>${mem.name} - ${mem.bp} - ${mem.desig}</option>`;
             });
@@ -902,8 +1314,14 @@
                 members[index] = { id: parseInt(id), name, bp, desig, joinType, unitJoinDate, mobile };
                 showToast('সদস্যের তথ্য আপডেট করা হয়েছে!');
             } else {
-                members.push({ id: Date.now(), name, bp, desig, joinType, unitJoinDate, mobile });
-                showToast('নতুন সদস্য যুক্ত করা হয়েছে!');
+                let existingIndex = members.findIndex(m => m.bp === bp);
+                if(existingIndex !== -1) {
+                    members[existingIndex] = { id: members[existingIndex].id, name, bp, desig, joinType, unitJoinDate, mobile };
+                    showToast('সদস্যের তথ্য আপডেট করা হয়েছে!');
+                } else {
+                    members.push({ id: Date.now(), name, bp, desig, joinType, unitJoinDate, mobile });
+                    showToast('নতুন সদস্য যুক্ত করা হয়েছে!');
+                }
             }
 
             localStorage.setItem('istc_members', JSON.stringify(members));
@@ -950,7 +1368,7 @@
             let tbody = document.getElementById('member-list-body');
             tbody.innerHTML = '';
             members.forEach(mem => {
-                let formattedUnitDate = mem.unitJoinDate ? new Date(mem.unitJoinDate).toLocaleDateString('bn-BD', { year: 'numeric', month: 'short', day: 'numeric' }) : '-';
+                let formattedUnitDate = mem.unitJoinDate ? new Date(mem.unitJoinDate).toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' }) : '-';
                 tbody.innerHTML += `
                     <tr>
                         <td>${mem.name}</td>
@@ -988,7 +1406,7 @@
             tbody.innerHTML = '';
             
             members.forEach((mem, index) => {
-                let formattedUnitDate = mem.unitJoinDate ? new Date(mem.unitJoinDate).toLocaleDateString('bn-BD', { year: 'numeric', month: 'short', day: 'numeric' }) : '-';
+                let formattedUnitDate = mem.unitJoinDate ? new Date(mem.unitJoinDate).toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' }) : '-';
                 tbody.innerHTML += `
                     <tr>
                         <td style="text-align:center; border: 1px solid #000; padding: 8px;">${index + 1}</td>
@@ -1003,6 +1421,7 @@
             
             document.getElementById('print-area').classList.remove('print-active');
             document.getElementById('print-area-duty').classList.remove('print-active');
+            if(document.getElementById('print-area-multi-duty')) document.getElementById('print-area-multi-duty').classList.remove('print-active');
             document.getElementById('print-area-members').classList.add('print-active');
             window.print();
         }
@@ -1013,7 +1432,9 @@
             let searchDate = document.getElementById('search-att-date').value;
             tbody.innerHTML = '';
             
-            let dates = Object.keys(attendanceData).sort((a,b) => new Date(b) - new Date(a));
+            // Deduplicate dates logic to ensure single entry per date
+            let rawDates = Object.keys(attendanceData);
+            let dates = rawDates.filter((item, index) => rawDates.indexOf(item) === index).sort((a,b) => new Date(b) - new Date(a));
             
             if(searchDate) {
                 dates = dates.filter(d => d === searchDate);
@@ -1026,6 +1447,8 @@
 
             dates.forEach(d => {
                 let dayData = attendanceData[d];
+                if (!Array.isArray(dayData)) return;
+                
                 let present = dayData.filter(x => x.status === 'উপস্থিত').length;
                 let absent = dayData.filter(x => x.status === 'অনুপস্থিত').length;
                 let formattedDate = new Date(d).toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -1060,6 +1483,10 @@
             document.getElementById('att-records-section').style.display = 'block';
             document.getElementById('att-form-section').style.display = 'none';
             renderSavedAttendance();
+            // ড্যাশবোর্ড রেন্ডার আপডেট
+            if(document.querySelector('.card.active').id === 'dashboard'){
+               loadDashboard();
+            }
         }
 
         function loadAttendanceList() {
@@ -1072,7 +1499,7 @@
             let todayData = attendanceData[date] || [];
 
             members.forEach(mem => {
-                let existing = todayData.find(d => d.id === mem.id);
+                let existing = todayData.find(d => d.id == mem.id);
                 let status = existing ? existing.status : 'উপস্থিত';
                 let remarks = existing ? existing.remarks : '';
 
@@ -1086,7 +1513,9 @@
                                 <option value="উপস্থিত" ${status==='উপস্থিত'?'selected':''}>উপস্থিত</option>
                                 <option value="অনুপস্থিত" ${status==='অনুপস্থিত'?'selected':''}>অনুপস্থিত</option>
                                 <option value="ছুটি" ${status==='ছুটি'?'selected':''}>ছুটিতে</option>
-                                <option value="ডিউটি" ${status==='ডিউটি'?'selected':''}>অন্যান্য ডিউটি</option>
+                                <option value="ডাক ডিউটি" ${status==='ডাক ডিউটি'?'selected':''}>ডাক ডিউটি</option>
+                                <option value="অসুস্থ" ${status==='অসুস্থ'?'selected':''}>অসুস্থ</option>
+                                <option value="অফিস ডিউটি" ${status==='অফিস ডিউটি'?'selected':''}>অফিস ডিউটি</option>
                             </select>
                         </td>
                         <td><input type="text" class="att-remarks" placeholder="মতামত লিখুন" value="${remarks}" style="width:90%; padding:5px;"></td>
@@ -1109,7 +1538,9 @@
                 });
             });
 
-            attendanceData[date] = todayData;
+            // Clean date key to avoid duplicate record creation for same date
+            let cleanDate = date.trim();
+            attendanceData[cleanDate] = todayData;
             localStorage.setItem('istc_attendance', JSON.stringify(attendanceData));
             syncToGoogleSheet('SYNC_ATTENDANCE', attendanceData);
             
@@ -1117,7 +1548,7 @@
         }
 
         function deleteAttendanceRecord(date) {
-            let formattedDate = new Date(date).toLocaleDateString('bn-BD');
+            let formattedDate = new Date(date).toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' });
             if(confirm(`${formattedDate} তারিখের সকল হাজিরা ডাটা মুছে ফেলতে চান?`)) {
                 delete attendanceData[date];
                 localStorage.setItem('istc_attendance', JSON.stringify(attendanceData));
@@ -1136,10 +1567,17 @@
                 return;
             }
             members.forEach(mem => {
+                let lastSixDigits = String(mem.id).slice(-6);
                 grid.innerHTML += `
-                    <button class="member-btn-icon" onclick="loadDutyProfile(${mem.id})">
-                        👤 ${mem.name} 
-                    </button>`;
+                    <div class="premium-member-card" onclick="loadDutyProfile(${mem.id})" style="position: relative;">
+                        <input type="checkbox" class="multi-duty-checkbox" value="${mem.id}" onclick="event.stopPropagation()" style="position: absolute; top: 12px; right: 12px; transform: scale(1.3); cursor: pointer; z-index: 10;" title="প্রিন্ট করার জন্য সিলেক্ট করুন">
+                        <span class="member-card-id">ID: ${lastSixDigits}</span>
+                        <div class="member-card-avatar">👤</div>
+                        <h4 class="member-card-name">${mem.name}</h4>
+                        <p class="member-card-info"><b>বিপি নম্বর:</b> ${mem.bp}</p>
+                        <p class="member-card-info"><b>পদবী:</b> ${mem.desig}</p>
+                        <p class="member-card-mobile">📱 ${mem.mobile}</p>
+                    </div>`;
             });
         }
 
@@ -1183,8 +1621,14 @@
                 dutyData[index] = { id: parseInt(id), memberId: parseInt(memberId), date, dest, type, remarks };
                 showToast('ডিউটি আপডেট করা হয়েছে!');
             } else {
-                dutyData.push({ id: Date.now(), memberId: parseInt(memberId), date, dest, type, remarks });
-                showToast('নতুন ডিউটি যুক্ত করা হয়েছে!');
+                let existingIndex = dutyData.findIndex(d => d.memberId == parseInt(memberId) && d.date == date && d.dest == dest && d.type == type);
+                if(existingIndex !== -1) {
+                    dutyData[existingIndex] = { id: dutyData[existingIndex].id, memberId: parseInt(memberId), date, dest, type, remarks };
+                    showToast('ডিউটি আপডেট করা হয়েছে!');
+                } else {
+                    dutyData.push({ id: Date.now(), memberId: parseInt(memberId), date, dest, type, remarks });
+                    showToast('নতুন ডিউটি যুক্ত করা হয়েছে!');
+                }
             }
 
             localStorage.setItem('istc_duty', JSON.stringify(dutyData));
@@ -1227,7 +1671,7 @@
             }
 
             memberDuties.forEach(d => {
-                let formattedDate = new Date(d.date).toLocaleDateString('bn-BD', { year: 'numeric', month: 'short', day: 'numeric' });
+                let formattedDate = new Date(d.date).toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' });
                 tbody.innerHTML += `
                     <tr>
                         <td style="font-weight:bold;">${formattedDate}</td>
@@ -1279,7 +1723,268 @@
             document.getElementById('btn-cancel-duty').style.display = 'none';
         }
 
-        // --- 5. Report Section & Printing Logic ---
+        // --- 5. Letters (চিঠিপত্র) Section Logic ---
+        function switchLettersTab(type) {
+            let recvSec = document.getElementById('letters-recv-section');
+            let sendSec = document.getElementById('letters-send-section');
+            let recvBtn = document.getElementById('btn-letters-recv-tab');
+            let sendBtn = document.getElementById('btn-letters-send-tab');
+
+            if (type === 'recv') {
+                recvSec.style.display = 'block';
+                sendSec.style.display = 'none';
+                recvBtn.style.backgroundColor = 'var(--police-gold)';
+                recvBtn.style.color = 'var(--police-blue)';
+                sendBtn.style.backgroundColor = '#4a5568';
+                sendBtn.style.color = 'white';
+            } else {
+                recvSec.style.display = 'none';
+                sendSec.style.display = 'block';
+                sendBtn.style.backgroundColor = 'var(--police-gold)';
+                sendBtn.style.color = 'var(--police-blue)';
+                recvBtn.style.backgroundColor = '#4a5568';
+                recvBtn.style.color = 'white';
+            }
+        }
+
+        function saveReceivedLetter() {
+            let id = document.getElementById('recv-id').value;
+            let regNo = document.getElementById('recv-reg-no').value;
+            let date = document.getElementById('recv-date').value;
+            let memoNo = document.getElementById('recv-memo-no').value;
+            let subject = document.getElementById('recv-subject').value;
+
+            if(!regNo || !date || !memoNo || !subject) {
+                showToast('দয়া করে সকল তথ্য পূরণ করুন!');
+                return;
+            }
+
+            if(id) {
+                let index = receivedLetters.findIndex(l => l.id == id);
+                receivedLetters[index] = { id: parseInt(id), regNo, date, memoNo, subject };
+                showToast('গৃহীত পত্রের তথ্য আপডেট করা হয়েছে!');
+            } else {
+                receivedLetters.push({ id: Date.now(), regNo, date, memoNo, subject });
+                showToast('নতুন গৃহীত পত্র যুক্ত করা হয়েছে!');
+            }
+
+            localStorage.setItem('istc_recv_letters', JSON.stringify(receivedLetters));
+            syncToGoogleSheet('SYNC_RECV_LETTERS', receivedLetters);
+            
+            resetReceivedLetterForm();
+            renderReceivedLetters();
+        }
+
+        function editReceivedLetter(id) {
+            let item = receivedLetters.find(l => l.id == id);
+            if(item) {
+                document.getElementById('recv-id').value = item.id;
+                document.getElementById('recv-reg-no').value = item.regNo;
+                document.getElementById('recv-date').value = item.date;
+                document.getElementById('recv-memo-no').value = item.memoNo;
+                document.getElementById('recv-subject').value = item.subject;
+
+                document.getElementById('recv-form-title').innerText = 'পত্র গ্রহণ - তথ্য আপডেট করুন';
+                document.getElementById('btn-save-recv').innerText = 'আপডেট করুন';
+                document.getElementById('btn-cancel-recv').style.display = 'inline-block';
+            }
+        }
+
+        function deleteReceivedLetter(id) {
+            if(confirm('আপনি কি নিশ্চিত যে এই তথ্যটি মুছে ফেলতে চান?')) {
+                receivedLetters = receivedLetters.filter(l => l.id != id);
+                localStorage.setItem('istc_recv_letters', JSON.stringify(receivedLetters));
+                syncToGoogleSheet('SYNC_RECV_LETTERS', receivedLetters);
+                renderReceivedLetters();
+            }
+        }
+
+        function resetReceivedLetterForm() {
+            document.getElementById('recv-id').value = '';
+            document.getElementById('recv-reg-no').value = '';
+            document.getElementById('recv-date').value = '';
+            document.getElementById('recv-memo-no').value = '';
+            document.getElementById('recv-subject').value = '';
+
+            document.getElementById('recv-form-title').innerText = 'পত্র গ্রহণ - নতুন তথ্য যুক্ত করুন';
+            document.getElementById('btn-save-recv').innerText = 'তথ্য সংরক্ষণ করুন';
+            document.getElementById('btn-cancel-recv').style.display = 'none';
+        }
+
+        function renderReceivedLetters() {
+            let tbody = document.getElementById('recv-letters-body');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+
+            if(receivedLetters.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">কোনো গৃহীত পত্রের রেকর্ড নেই</td></tr>';
+                return;
+            }
+
+            receivedLetters.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+            receivedLetters.forEach(item => {
+                let formattedDate = new Date(item.date).toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' });
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${item.regNo}</td>
+                        <td style="font-weight:bold;">${formattedDate}</td>
+                        <td>${item.memoNo}</td>
+                        <td>${item.subject}</td>
+                        <td>
+                            <button class="btn btn-action" onclick="editReceivedLetter(${item.id})">এডিট</button>
+                            <button class="btn btn-red btn-action" onclick="deleteReceivedLetter(${item.id})">মুছুন</button>
+                        </td>
+                    </tr>`;
+            });
+        }
+
+        function saveSentLetter() {
+            let id = document.getElementById('send-id').value;
+            let regNo = document.getElementById('send-reg-no').value;
+            let date = document.getElementById('send-date').value;
+            let memoNo = document.getElementById('send-memo-no').value;
+            let subject = document.getElementById('send-subject').value;
+
+            if(!regNo || !date || !memoNo || !subject) {
+                showToast('দয়া করে সকল তথ্য পূরণ করুন!');
+                return;
+            }
+
+            if(id) {
+                let index = sentLetters.findIndex(l => l.id == id);
+                sentLetters[index] = { id: parseInt(id), regNo, date, memoNo, subject };
+                showToast('প্রেরিত পত্রের তথ্য আপডেট করা হয়েছে!');
+            } else {
+                sentLetters.push({ id: Date.now(), regNo, date, memoNo, subject });
+                showToast('নতুন প্রেরিত পত্র যুক্ত করা হয়েছে!');
+            }
+
+            localStorage.setItem('istc_sent_letters', JSON.stringify(sentLetters));
+            syncToGoogleSheet('SYNC_SENT_LETTERS', sentLetters);
+            
+            resetSentLetterForm();
+            renderSentLetters();
+        }
+
+        function editSentLetter(id) {
+            let item = sentLetters.find(l => l.id == id);
+            if(item) {
+                document.getElementById('send-id').value = item.id;
+                document.getElementById('send-reg-no').value = item.regNo;
+                document.getElementById('send-date').value = item.date;
+                document.getElementById('send-memo-no').value = item.memoNo;
+                document.getElementById('send-subject').value = item.subject;
+
+                document.getElementById('send-form-title').innerText = 'পত্র প্রেরণ - তথ্য আপডেট করুন';
+                document.getElementById('btn-save-send').innerText = 'আপডেট করুন';
+                document.getElementById('btn-cancel-send').style.display = 'inline-block';
+            }
+        }
+
+        function deleteSentLetter(id) {
+            if(confirm('আপনি কি নিশ্চিত যে এই তথ্যটি মুছে ফেলতে চান?')) {
+                sentLetters = sentLetters.filter(l => l.id != id);
+                localStorage.setItem('istc_sent_letters', JSON.stringify(sentLetters));
+                syncToGoogleSheet('SYNC_SENT_LETTERS', sentLetters);
+                renderSentLetters();
+            }
+        }
+
+        function resetSentLetterForm() {
+            document.getElementById('send-id').value = '';
+            document.getElementById('send-reg-no').value = '';
+            document.getElementById('send-date').value = '';
+            document.getElementById('send-memo-no').value = '';
+            document.getElementById('send-subject').value = '';
+
+            document.getElementById('send-form-title').innerText = 'পত্র প্রেরণ - নতুন তথ্য যুক্ত করুন';
+            document.getElementById('btn-save-send').innerText = 'তথ্য সংরক্ষণ করুন';
+            document.getElementById('btn-cancel-send').style.display = 'none';
+        }
+
+        function renderSentLetters() {
+            let tbody = document.getElementById('send-letters-body');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+
+            if(sentLetters.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">কোনো প্রেরিত পত্রের রেকর্ড নেই</td></tr>';
+                return;
+            }
+
+            sentLetters.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+            sentLetters.forEach(item => {
+                let formattedDate = new Date(item.date).toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' });
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${item.regNo}</td>
+                        <td style="font-weight:bold;">${formattedDate}</td>
+                        <td>${item.memoNo}</td>
+                        <td>${item.subject}</td>
+                        <td>
+                            <button class="btn btn-action" onclick="editSentLetter(${item.id})">এডিট</button>
+                            <button class="btn btn-red btn-action" onclick="deleteSentLetter(${item.id})">মুছুন</button>
+                        </td>
+                    </tr>`;
+            });
+        }
+
+        function printLettersReport() {
+            let type = document.getElementById('letter-print-type').value;
+            let start = document.getElementById('letter-print-start').value;
+            let end = document.getElementById('letter-print-end').value;
+
+            let dataList = type === 'recv' ? [...receivedLetters] : [...sentLetters];
+            let typeName = type === 'recv' ? 'পত্র গ্রহণ রেজিস্টার' : 'পত্র প্রেরণ রেজিস্টার';
+            
+            document.getElementById('letter-print-title').innerText = typeName + ' রিপোর্ট';
+
+            if(start && end) {
+                let startTxt = new Date(start).toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' });
+                let endTxt = new Date(end).toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' });
+                document.getElementById('letter-print-date-range').innerText = `তারিখ রেঞ্জ: ${startTxt} হতে ${endTxt}`;
+                dataList = dataList.filter(l => new Date(l.date) >= new Date(start) && new Date(l.date) <= new Date(end));
+            } else if(start) {
+                let startTxt = new Date(start).toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' });
+                document.getElementById('letter-print-date-range').innerText = `তারিখ: ${startTxt}`;
+                dataList = dataList.filter(l => l.date === start);
+            } else {
+                document.getElementById('letter-print-date-range').innerText = `সকল রেকর্ড`;
+            }
+
+            dataList.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+            let tbody = document.getElementById('print-letters-table-body');
+            tbody.innerHTML = '';
+
+            if(dataList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:10px; border:1px solid #000;">কোনো ডাটা পাওয়া যায়নি</td></tr>';
+            } else {
+                dataList.forEach((item, index) => {
+                    let formattedDate = new Date(item.date).toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' });
+                    tbody.innerHTML += `
+                        <tr>
+                            <td style="text-align:center; border: 1px solid #000; padding: 8px;">${index + 1}</td>
+                            <td style="border: 1px solid #000; padding: 8px;">${item.regNo}</td>
+                            <td style="border: 1px solid #000; padding: 8px;">${formattedDate}</td>
+                            <td style="border: 1px solid #000; padding: 8px;">${item.memoNo}</td>
+                            <td style="border: 1px solid #000; padding: 8px;">${item.subject}</td>
+                        </tr>`;
+                });
+            }
+
+            document.getElementById('print-area').classList.remove('print-active');
+            document.getElementById('print-area-duty').classList.remove('print-active');
+            document.getElementById('print-area-members').classList.remove('print-active');
+            if(document.getElementById('print-area-multi-duty')) document.getElementById('print-area-multi-duty').classList.remove('print-active');
+            
+            document.getElementById('print-area-letters').classList.add('print-active');
+            window.print();
+        }
+
+        // --- 6. Report Section & Printing Logic ---
         function generateReportPreview() {
             let date = document.getElementById('rep-date').value;
             if(!date) return;
@@ -1294,7 +1999,7 @@
             let todayData = attendanceData[date] || [];
             
             members.forEach((mem, index) => {
-                let rec = todayData.find(d => d.id === mem.id);
+                let rec = todayData.find(d => d.id == mem.id);
                 let status = rec ? rec.status : '-';
                 let remarks = rec ? rec.remarks : '-';
 
@@ -1332,6 +2037,8 @@
             generateReportPreview();
             document.getElementById('print-area-duty').classList.remove('print-active');
             document.getElementById('print-area-members').classList.remove('print-active');
+            if(document.getElementById('print-area-multi-duty')) document.getElementById('print-area-multi-duty').classList.remove('print-active');
+            if(document.getElementById('print-area-letters')) document.getElementById('print-area-letters').classList.remove('print-active');
             document.getElementById('print-area').classList.add('print-active');
             window.print();
         }
@@ -1354,8 +2061,8 @@
             
             let statText = document.getElementById('current-month-duty-stats').innerText.replace('📅 ', '');
             if(start || end) {
-                let startText = start ? new Date(start).toLocaleDateString('bn-BD') : 'শুরু';
-                let endText = end ? new Date(end).toLocaleDateString('bn-BD') : 'বর্তমান';
+                let startText = start ? new Date(start).toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' }) : 'শুরু';
+                let endText = end ? new Date(end).toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' }) : 'বর্তমান';
                 statText += ` | প্রিন্ট রেঞ্জ: ${startText} থেকে ${endText}`;
             }
             document.getElementById('pd-month-stat').innerText = statText;
@@ -1374,7 +2081,7 @@
                 tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:10px; border:1px solid #000;">কোনো ডাটা নেই</td></tr>';
             } else {
                 memberDuties.forEach((d, index) => {
-                    let formattedDate = new Date(d.date).toLocaleDateString('bn-BD', { year: 'numeric', month: 'short', day: 'numeric' });
+                    let formattedDate = new Date(d.date).toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' });
                     tbody.innerHTML += `
                         <tr>
                             <td style="text-align:center; border: 1px solid #000; padding: 8px;">${index + 1}</td>
@@ -1388,7 +2095,105 @@
 
             document.getElementById('print-area').classList.remove('print-active');
             document.getElementById('print-area-members').classList.remove('print-active');
+            if(document.getElementById('print-area-multi-duty')) document.getElementById('print-area-multi-duty').classList.remove('print-active');
+            if(document.getElementById('print-area-letters')) document.getElementById('print-area-letters').classList.remove('print-active');
             document.getElementById('print-area-duty').classList.add('print-active');
+            window.print();
+        }
+        
+        function printSelectedMembersDuty() {
+            let checkboxes = document.querySelectorAll('.multi-duty-checkbox:checked');
+            if(checkboxes.length === 0) {
+                showToast('দয়া করে অন্তত একজন সদস্য নির্বাচন করুন!');
+                return;
+            }
+
+            let container = document.getElementById('multi-duty-print-content');
+            container.innerHTML = '';
+
+            let currentMonth = new Date().getMonth();
+            let currentYear = new Date().getFullYear();
+
+            checkboxes.forEach((cb, index) => {
+                let memberId = cb.value;
+                let mem = members.find(m => m.id == memberId);
+                if(!mem) return;
+
+                let memberDuties = dutyData.filter(d => d.memberId == memberId);
+                memberDuties = memberDuties.filter(d => {
+                    let dDate = new Date(d.date);
+                    return dDate.getMonth() === currentMonth && dDate.getFullYear() === currentYear;
+                });
+                
+                memberDuties.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+                let tbodyHtml = '';
+                if(memberDuties.length === 0) {
+                    tbodyHtml = '<tr><td colspan="5" style="text-align:center; padding:10px; border:1px solid #000;">চলতি মাসে কোনো ডিউটি নেই</td></tr>';
+                } else {
+                    memberDuties.forEach((d, i) => {
+                        let formattedDate = new Date(d.date).toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' });
+                        tbodyHtml += `
+                            <tr>
+                                <td style="text-align:center; border: 1px solid #000; padding: 8px;">${i + 1}</td>
+                                <td style="border: 1px solid #000; padding: 8px;">${formattedDate}</td>
+                                <td style="border: 1px solid #000; padding: 8px;">${d.dest}</td>
+                                <td style="border: 1px solid #000; padding: 8px;">${d.type}</td>
+                                <td style="border: 1px solid #000; padding: 8px;">${d.remarks}</td>
+                            </tr>`;
+                    });
+                }
+
+                let pageBreak = index < checkboxes.length - 1 ? 'page-break-after: always;' : '';
+
+                container.innerHTML += `
+                    <div style="${pageBreak} margin-bottom: 30px;">
+                        <div class="print-header">
+                            <h3>গণপ্রজাতন্ত্রী বাংলাদেশ সরকার</h3>
+                            <h4>বাংলাদেশ পুলিশ</h4>
+                            <h4>ইন-সার্ভিস ট্রেনিং সেন্টার , নীলফামারী</h4>
+                            <p><strong>ব্যক্তিগত ডিউটি রিপোর্ট (চলতি মাস)</strong></p>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px; padding: 15px; border: 1px solid #000;">
+                            <p style="margin:5px 0;"><strong>নাম:</strong> ${mem.name}</p>
+                            <p style="margin:5px 0;"><strong>বিপি নাম্বার:</strong> ${mem.bp}</p>
+                            <p style="margin:5px 0;"><strong>পদবী:</strong> ${mem.desig}</p>
+                            <p style="margin:5px 0; font-weight:bold;"><strong>চলতি মাসে মোট ডিউটি:</strong> ${memberDuties.length} টি</p>
+                        </div>
+
+                        <table class="print-table" style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr>
+                                    <th style="border: 1px solid #000; padding: 8px; background-color:#f2f2f2;">ক্রমিক</th>
+                                    <th style="border: 1px solid #000; padding: 8px; background-color:#f2f2f2;">তারিখ</th>
+                                    <th style="border: 1px solid #000; padding: 8px; background-color:#f2f2f2;">গন্তব্য স্থল</th>
+                                    <th style="border: 1px solid #000; padding: 8px; background-color:#f2f2f2;">ডিউটি ধরন</th>
+                                    <th style="border: 1px solid #000; padding: 8px; background-color:#f2f2f2;">মন্তব্য</th>
+                                </tr>
+                            </thead>
+                            <tbody>${tbodyHtml}</tbody>
+                        </table>
+                        
+                        <div class="signature-section" style="justify-content: flex-end; margin-top:60px;">
+                            <div class="signature-box">
+                                <div class="signature-line"></div>
+                                <strong>কর্তৃপক্ষের স্বাক্ষর ও সীল</strong><br>
+                                ইন-সার্ভিস ট্রেনিং সেন্টার,নীলফামারী।
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('print-area').classList.remove('print-active');
+            document.getElementById('print-area-members').classList.remove('print-active');
+            document.getElementById('print-area-duty').classList.remove('print-active');
+            if(document.getElementById('print-area-letters')) document.getElementById('print-area-letters').classList.remove('print-active');
+            
+            let multiPrintArea = document.getElementById('print-area-multi-duty');
+            multiPrintArea.classList.add('print-active');
+            
             window.print();
         }
 
@@ -1396,8 +2201,17 @@
         showTab('dashboard');
         loadProfileView();
         
-        // --- Trigger Cloud Sync on App Load ---
-        window.addEventListener('load', fetchInitialData);
+        // --- NEW: Trigger Cloud Sync and handle Loader on App Load ---
+        window.addEventListener('load', async () => {
+            await fetchInitialData();
+            setTimeout(() => {
+                let loader = document.getElementById('premium-loader');
+                if (loader) {
+                    loader.style.opacity = '0';
+                    setTimeout(() => loader.style.display = 'none', 600);
+                }
+            }, 800);
+        });
     </script>
 </body>
 </html>
