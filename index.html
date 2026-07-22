@@ -741,6 +741,7 @@
                 <input type="hidden" id="recv-id">
                 <div class="form-grid">
                     <div class="form-group"><label>রেজিস্টার নাম্বার</label><input type="text" id="recv-reg-no" placeholder="রেজিস্টার নাম্বার"></div>
+                    <div class="form-group"><label>প্রেরকের ঠিকানা</label><input type="text" id="recv-from-address" placeholder="কোথায় থেকে পত্র এসেছে"></div>
                     <div class="form-group"><label>তারিখ</label><input type="date" id="recv-date"></div>
                     <div class="form-group"><label>স্মারক নাম্বার</label><input type="text" id="recv-memo-no" placeholder="স্মারক নাম্বার"></div>
                     <div class="form-group"><label>বিষয়</label><input type="text" id="recv-subject" placeholder="পত্রের বিষয়"></div>
@@ -752,7 +753,7 @@
                 <div class="table-responsive">
                     <table class="premium-table">
                         <thead>
-                            <tr><th>রেজিস্টার নাম্বার</th><th>তারিখ</th><th>স্মারক নাম্বার</th><th>বিষয়</th><th>অ্যাকশন</th></tr>
+                            <tr><th>রেজিস্টার নাম্বার</th><th>প্রেরকের ঠিকানা</th><th>তারিখ</th><th>স্মারক নাম্বার</th><th>বিষয়</th><th>অ্যাকশন</th></tr>
                         </thead>
                         <tbody id="recv-letters-body"></tbody>
                     </table>
@@ -764,7 +765,7 @@
                 <h4 style="color: var(--police-blue); border-bottom: 2px solid var(--police-blue); padding-bottom: 5px;" id="send-form-title">পত্র প্রেরণ - নতুন তথ্য যুক্ত করুন</h4>
                 <input type="hidden" id="send-id">
                 <div class="form-grid">
-                    <div class="form-group"><label>রেজিস্টার নাম্বার</label><input type="text" id="send-reg-no" placeholder="রেজিস্টার নাম্বার"></div>
+                    <div class="form-group"><label>প্রাপকের ঠিকানা</label><input type="text" id="send-to-address" placeholder="কোথায় পাঠানো হচ্ছে"></div>
                     <div class="form-group"><label>তারিখ</label><input type="date" id="send-date"></div>
                     <div class="form-group"><label>স্মারক নাম্বার</label><input type="text" id="send-memo-no" placeholder="স্মারক নাম্বার"></div>
                     <div class="form-group"><label>বিষয়</label><input type="text" id="send-subject" placeholder="পত্রের বিষয়"></div>
@@ -776,7 +777,7 @@
                 <div class="table-responsive">
                     <table class="premium-table">
                         <thead>
-                            <tr><th>রেজিস্টার নাম্বার</th><th>তারিখ</th><th>স্মারক নাম্বার</th><th>বিষয়</th><th>অ্যাকশন</th></tr>
+                            <tr><th>প্রাপকের ঠিকানা</th><th>তারিখ</th><th>স্মারক নাম্বার</th><th>বিষয়</th><th>অ্যাকশন</th></tr>
                         </thead>
                         <tbody id="send-letters-body"></tbody>
                     </table>
@@ -1750,21 +1751,22 @@
         function saveReceivedLetter() {
             let id = document.getElementById('recv-id').value;
             let regNo = document.getElementById('recv-reg-no').value;
+            let fromAddress = document.getElementById('recv-from-address').value;
             let date = document.getElementById('recv-date').value;
             let memoNo = document.getElementById('recv-memo-no').value;
             let subject = document.getElementById('recv-subject').value;
 
-            if(!regNo || !date || !memoNo || !subject) {
+            if(!regNo || !fromAddress || !date || !memoNo || !subject) {
                 showToast('দয়া করে সকল তথ্য পূরণ করুন!');
                 return;
             }
 
             if(id) {
                 let index = receivedLetters.findIndex(l => l.id == id);
-                receivedLetters[index] = { id: parseInt(id), regNo, date, memoNo, subject };
+                receivedLetters[index] = { id: parseInt(id), regNo, fromAddress, date, memoNo, subject };
                 showToast('গৃহীত পত্রের তথ্য আপডেট করা হয়েছে!');
             } else {
-                receivedLetters.push({ id: Date.now(), regNo, date, memoNo, subject });
+                receivedLetters.push({ id: Date.now(), regNo, fromAddress, date, memoNo, subject });
                 showToast('নতুন গৃহীত পত্র যুক্ত করা হয়েছে!');
             }
 
@@ -1780,6 +1782,7 @@
             if(item) {
                 document.getElementById('recv-id').value = item.id;
                 document.getElementById('recv-reg-no').value = item.regNo;
+                document.getElementById('recv-from-address').value = item.fromAddress || '';
                 document.getElementById('recv-date').value = item.date;
                 document.getElementById('recv-memo-no').value = item.memoNo;
                 document.getElementById('recv-subject').value = item.subject;
@@ -1802,6 +1805,7 @@
         function resetReceivedLetterForm() {
             document.getElementById('recv-id').value = '';
             document.getElementById('recv-reg-no').value = '';
+            document.getElementById('recv-from-address').value = '';
             document.getElementById('recv-date').value = '';
             document.getElementById('recv-memo-no').value = '';
             document.getElementById('recv-subject').value = '';
@@ -1817,7 +1821,7 @@
             tbody.innerHTML = '';
 
             if(receivedLetters.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">কোনো গৃহীত পত্রের রেকর্ড নেই</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">কোনো গৃহীত পত্রের রেকর্ড নেই</td></tr>';
                 return;
             }
 
@@ -1828,6 +1832,7 @@
                 tbody.innerHTML += `
                     <tr>
                         <td>${item.regNo}</td>
+                        <td>${item.fromAddress || ''}</td>
                         <td style="font-weight:bold;">${formattedDate}</td>
                         <td>${item.memoNo}</td>
                         <td>${item.subject}</td>
@@ -1841,22 +1846,22 @@
 
         function saveSentLetter() {
             let id = document.getElementById('send-id').value;
-            let regNo = document.getElementById('send-reg-no').value;
+            let toAddress = document.getElementById('send-to-address').value;
             let date = document.getElementById('send-date').value;
             let memoNo = document.getElementById('send-memo-no').value;
             let subject = document.getElementById('send-subject').value;
 
-            if(!regNo || !date || !memoNo || !subject) {
+            if(!toAddress || !date || !memoNo || !subject) {
                 showToast('দয়া করে সকল তথ্য পূরণ করুন!');
                 return;
             }
 
             if(id) {
                 let index = sentLetters.findIndex(l => l.id == id);
-                sentLetters[index] = { id: parseInt(id), regNo, date, memoNo, subject };
+                sentLetters[index] = { id: parseInt(id), toAddress, date, memoNo, subject };
                 showToast('প্রেরিত পত্রের তথ্য আপডেট করা হয়েছে!');
             } else {
-                sentLetters.push({ id: Date.now(), regNo, date, memoNo, subject });
+                sentLetters.push({ id: Date.now(), toAddress, date, memoNo, subject });
                 showToast('নতুন প্রেরিত পত্র যুক্ত করা হয়েছে!');
             }
 
@@ -1871,7 +1876,7 @@
             let item = sentLetters.find(l => l.id == id);
             if(item) {
                 document.getElementById('send-id').value = item.id;
-                document.getElementById('send-reg-no').value = item.regNo;
+                document.getElementById('send-to-address').value = item.toAddress || item.regNo || '';
                 document.getElementById('send-date').value = item.date;
                 document.getElementById('send-memo-no').value = item.memoNo;
                 document.getElementById('send-subject').value = item.subject;
@@ -1893,7 +1898,7 @@
 
         function resetSentLetterForm() {
             document.getElementById('send-id').value = '';
-            document.getElementById('send-reg-no').value = '';
+            document.getElementById('send-to-address').value = '';
             document.getElementById('send-date').value = '';
             document.getElementById('send-memo-no').value = '';
             document.getElementById('send-subject').value = '';
@@ -1919,7 +1924,7 @@
                 let formattedDate = new Date(item.date).toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' });
                 tbody.innerHTML += `
                     <tr>
-                        <td>${item.regNo}</td>
+                        <td>${item.toAddress || item.regNo || ''}</td>
                         <td style="font-weight:bold;">${formattedDate}</td>
                         <td>${item.memoNo}</td>
                         <td>${item.subject}</td>
@@ -1956,30 +1961,63 @@
 
             dataList.sort((a,b) => new Date(b.date) - new Date(a.date));
 
+            let theadTr = document.querySelector('#print-area-letters thead tr');
+            if (type === 'recv') {
+                theadTr.innerHTML = `
+                    <th style="border: 1px solid #000; padding: 8px; background-color:#f2f2f2;">ক্রমিক</th>
+                    <th style="border: 1px solid #000; padding: 8px; background-color:#f2f2f2;">রেজিস্টার নাম্বার</th>
+                    <th style="border: 1px solid #000; padding: 8px; background-color:#f2f2f2;">প্রেরকের ঠিকানা</th>
+                    <th style="border: 1px solid #000; padding: 8px; background-color:#f2f2f2;">তারিখ</th>
+                    <th style="border: 1px solid #000; padding: 8px; background-color:#f2f2f2;">স্মারক নাম্বার</th>
+                    <th style="border: 1px solid #000; padding: 8px; background-color:#f2f2f2;">বিষয়</th>
+                `;
+            } else {
+                theadTr.innerHTML = `
+                    <th style="border: 1px solid #000; padding: 8px; background-color:#f2f2f2;">ক্রমিক</th>
+                    <th style="border: 1px solid #000; padding: 8px; background-color:#f2f2f2;">প্রাপকের ঠিকানা</th>
+                    <th style="border: 1px solid #000; padding: 8px; background-color:#f2f2f2;">তারিখ</th>
+                    <th style="border: 1px solid #000; padding: 8px; background-color:#f2f2f2;">স্মারক নাম্বার</th>
+                    <th style="border: 1px solid #000; padding: 8px; background-color:#f2f2f2;">বিষয়</th>
+                `;
+            }
+
             let tbody = document.getElementById('print-letters-table-body');
             tbody.innerHTML = '';
 
             if(dataList.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:10px; border:1px solid #000;">কোনো ডাটা পাওয়া যায়নি</td></tr>';
+                let colspan = type === 'recv' ? "6" : "5";
+                tbody.innerHTML = '<tr><td colspan="' + colspan + '" style="text-align:center; padding:10px; border:1px solid #000;">কোনো ডাটা পাওয়া যায়নি</td></tr>';
             } else {
                 dataList.forEach((item, index) => {
                     let formattedDate = new Date(item.date).toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' });
-                    tbody.innerHTML += `
-                        <tr>
-                            <td style="text-align:center; border: 1px solid #000; padding: 8px;">${index + 1}</td>
-                            <td style="border: 1px solid #000; padding: 8px;">${item.regNo}</td>
-                            <td style="border: 1px solid #000; padding: 8px;">${formattedDate}</td>
-                            <td style="border: 1px solid #000; padding: 8px;">${item.memoNo}</td>
-                            <td style="border: 1px solid #000; padding: 8px;">${item.subject}</td>
-                        </tr>`;
+                    
+                    if (type === 'recv') {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td style="text-align:center; border: 1px solid #000; padding: 8px;">${index + 1}</td>
+                                <td style="border: 1px solid #000; padding: 8px;">${item.regNo}</td>
+                                <td style="border: 1px solid #000; padding: 8px;">${item.fromAddress || ''}</td>
+                                <td style="border: 1px solid #000; padding: 8px;">${formattedDate}</td>
+                                <td style="border: 1px solid #000; padding: 8px;">${item.memoNo}</td>
+                                <td style="border: 1px solid #000; padding: 8px;">${item.subject}</td>
+                            </tr>`;
+                    } else {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td style="text-align:center; border: 1px solid #000; padding: 8px;">${index + 1}</td>
+                                <td style="border: 1px solid #000; padding: 8px;">${item.toAddress || item.regNo || ''}</td>
+                                <td style="border: 1px solid #000; padding: 8px;">${formattedDate}</td>
+                                <td style="border: 1px solid #000; padding: 8px;">${item.memoNo}</td>
+                                <td style="border: 1px solid #000; padding: 8px;">${item.subject}</td>
+                            </tr>`;
+                    }
                 });
             }
-
+            
             document.getElementById('print-area').classList.remove('print-active');
             document.getElementById('print-area-duty').classList.remove('print-active');
             document.getElementById('print-area-members').classList.remove('print-active');
             if(document.getElementById('print-area-multi-duty')) document.getElementById('print-area-multi-duty').classList.remove('print-active');
-            
             document.getElementById('print-area-letters').classList.add('print-active');
             window.print();
         }
